@@ -21,9 +21,6 @@ body {
 .translucent_box{
 	background-color: rgba(100,100,100,.1);
 }
-
-.seg{
-}
 	</style>
 	<script src="../js/lib/Sprite3D.js" type="text/javascript"></script>
 	<script src="../js/lib/RequestAnimationFrame.js" type="text/javascript"></script>
@@ -153,6 +150,48 @@ function init(){/*{{{*/
 			.update()
 	);
 
+	var seg1_1 = document.createElement('canvas');
+	seg1_1.width = front.width * .05 ;
+	seg1_1.height = front.height * .5 * .8 ;
+	container.addChild(
+		new Sprite3D(seg1_1)
+			.setClassName("seg").setPosition( top.width /4 + top.width/6 , -seg1_1.height/2 , -side1.width/2 )
+			.setProperty( 'context', seg1_1.getContext('2d') ).setRotateFirst( false )
+			.setRegistrationPoint(seg1_1.width / 2  , seg1_1.height / 2 , 0).update()
+	);
+
+	var seg1_2 = document.createElement('canvas');
+	seg1_2.width = front.width * .05 ;
+	seg1_2.height = front.height * .5 * .8 ;
+	container.addChild(
+		new Sprite3D(seg1_2)
+			.setClassName("seg").setPosition( top.width /4 + top.width/6 , seg1_2.height/2 , -side1.width/2 )
+			.setProperty( 'context', seg1_2.getContext('2d') ).setRotateFirst( false )
+			.setRegistrationPoint(seg1_2.width / 2  , seg1_2.height / 2 , 0).update()
+	);
+
+	var seg1_3 = document.createElement('canvas');
+	seg1_3.width = front.width * .05 ;
+	seg1_3.height = front.height * .5 * .8 ;
+	container.addChild(
+		new Sprite3D(seg1_3)
+			.setClassName("seg").setPosition( top.width /4 , -seg1_3.height , -side1.width/2 )
+			.setProperty( 'context', seg1_3.getContext('2d') ).setRotateFirst( false ).setRotationZ(90)
+			.setRegistrationPoint(seg1_3.width / 2  , seg1_3.height / 2 , 0).update()
+	);
+
+	var seg1_4 = document.createElement('canvas');
+	seg1_4.width = front.width * .05 ;
+	seg1_4.height = front.height * .5 * .8 ;
+	container.addChild(
+		new Sprite3D(seg1_4)
+			.setClassName("seg").setPosition( top.width /4 , 0 , -side1.width/2 )
+			.setProperty( 'context', seg1_4.getContext('2d') ).setRotateFirst( false ).setRotationZ(90)
+			.setRegistrationPoint(seg1_4.width / 2  , seg1_4.height / 2 , 0).update()
+	);
+
+
+
 	//}}}
 
 	animate();
@@ -175,7 +214,8 @@ function update(){/*{{{*/
 	}
 //	last = container.numChildren-1
 //	draw( container.children[last].context , container.children[last].domElement.width , container.children[last].domElement.height );
-	container.setRotationY(180).update();
+//	container.setRotationY(180).update();
+	container.rotateY(0.5).update();
 }/*}}}*/
 
 function plane_draw( ctx, width ,height){/*{{{*/
