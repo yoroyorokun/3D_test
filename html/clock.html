@@ -26,7 +26,7 @@ body {
 	<script src="../js/lib/RequestAnimationFrame.js" type="text/javascript"></script>
 	<script type="text/javascript">
 
-var stage,container,t=0;
+var stage,container,segs;
 
 function init(){/*{{{*/
 	//create root container 
@@ -35,6 +35,8 @@ function init(){/*{{{*/
 	//create object container
 	container = new Sprite3D().setZ(-00).rotateX(-00).update();
 	stage.addChild( container );
+	segs = new Sprite3D().update();
+	stage.addChild( segs );
 
 	var width = window.innerWidth;
 	var height = window.innerHeight;
@@ -153,9 +155,9 @@ function init(){/*{{{*/
 	var seg1_1 = document.createElement('canvas');
 	seg1_1.width = front.width * .05 ;
 	seg1_1.height = front.height * .5 * .8 ;
-	container.addChild(
+	segs.addChild(
 		new Sprite3D(seg1_1)
-			.setClassName("seg").setPosition( top.width /4 + top.width/6 , -seg1_1.height/2 , -side1.width/2 )
+			.setClassName("seg").setPosition( top.width /4 + seg1_1.height/2 , -seg1_1.height/2 , -side1.width/2 )
 			.setProperty( 'context', seg1_1.getContext('2d') ).setRotateFirst( false )
 			.setRegistrationPoint(seg1_1.width / 2  , seg1_1.height / 2 , 0).update()
 	);
@@ -163,9 +165,9 @@ function init(){/*{{{*/
 	var seg1_2 = document.createElement('canvas');
 	seg1_2.width = front.width * .05 ;
 	seg1_2.height = front.height * .5 * .8 ;
-	container.addChild(
+	segs.addChild(
 		new Sprite3D(seg1_2)
-			.setClassName("seg").setPosition( top.width /4 + top.width/6 , seg1_2.height/2 , -side1.width/2 )
+			.setClassName("seg").setPosition( top.width /4 + seg1_2.height/2 , seg1_2.height/2 , -side1.width/2 )
 			.setProperty( 'context', seg1_2.getContext('2d') ).setRotateFirst( false )
 			.setRegistrationPoint(seg1_2.width / 2  , seg1_2.height / 2 , 0).update()
 	);
@@ -173,7 +175,7 @@ function init(){/*{{{*/
 	var seg1_3 = document.createElement('canvas');
 	seg1_3.width = front.width * .05 ;
 	seg1_3.height = front.height * .5 * .8 ;
-	container.addChild(
+	segs.addChild(
 		new Sprite3D(seg1_3)
 			.setClassName("seg").setPosition( top.width /4 , -seg1_3.height , -side1.width/2 )
 			.setProperty( 'context', seg1_3.getContext('2d') ).setRotateFirst( false ).setRotationZ(90)
@@ -183,7 +185,7 @@ function init(){/*{{{*/
 	var seg1_4 = document.createElement('canvas');
 	seg1_4.width = front.width * .05 ;
 	seg1_4.height = front.height * .5 * .8 ;
-	container.addChild(
+	segs.addChild(
 		new Sprite3D(seg1_4)
 			.setClassName("seg").setPosition( top.width /4 , 0 , -side1.width/2 )
 			.setProperty( 'context', seg1_4.getContext('2d') ).setRotateFirst( false ).setRotationZ(90)
@@ -204,6 +206,7 @@ function animate(){/*{{{*/
 }/*}}}*/
 
 function update(){/*{{{*/
+	/*
 	for( var i = 0 ; i < container.numChildren ; i++ ){
 		var className = container.children[i].getClassName();
 		if  (className == "seg"){
@@ -212,10 +215,15 @@ function update(){/*{{{*/
 			colon_draw( container.children[i].context , container.children[i].domElement.width , container.children[i].domElement.height );
 		}
 	}
+	*/
+	for (var i=0 ; i < segs.numChildren; i++ ){
+		seg_draw( segs.children[i].context , segs.children[i].domElement.width , segs.children[i].domElement.height );
+	}
 //	last = container.numChildren-1
 //	draw( container.children[last].context , container.children[last].domElement.width , container.children[last].domElement.height );
 //	container.setRotationY(180).update();
 	container.rotateY(0.5).update();
+	segs.rotateY(0.5).update();
 }/*}}}*/
 
 function plane_draw( ctx, width ,height){/*{{{*/
@@ -234,11 +242,11 @@ function seg_draw(ctx, width, height){/*{{{*/
 	ctx.strokeStyle = ctx.fillStyle;
 	ctx.beginPath();
 	ctx.moveTo( width/2 , 0 );
-	ctx.lineTo( width , height /8 );
-	ctx.lineTo( width , height *7 /8 );
+	ctx.lineTo( width , width/2 );
+	ctx.lineTo( width , height - width/2 );
 	ctx.lineTo( width/2 , height );
-	ctx.lineTo( 0 , height *7 /8 );
-	ctx.lineTo( 0 , height /8 );
+	ctx.lineTo( 0 , height - width/2  );
+	ctx.lineTo( 0 , width /2 );
 	ctx.closePath();
 
 	ctx.fill();
