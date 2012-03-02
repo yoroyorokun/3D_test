@@ -24,7 +24,7 @@ body {
 
 var stage,container,t=0;
 
-function init(){
+function init(){/*{{{*/
 	//create root container 
 	stage = Sprite3D.createCenteredContainer();
 
@@ -32,61 +32,111 @@ function init(){
 	container = new Sprite3D().setZ(-00).rotateX(-00).update();
 	stage.addChild( container );
 
-	var canvas = document.createElement('canvas');
+	var width = window.innerWidth;
+	var height = window.innerHeight;
 
-	canvas.width = window.innerWidth * .2 ;//500;
-	canvas.height = window.innerHeight * .5;//500;
+	//canvas define
+	//{{{
+
+	var side1 = document.createElement('canvas');
+	side1.width = width * .2 ;//500;
+	side1.height = height * .5;//500;
 	container.addChild(
-		new Sprite3D(canvas)
+		new Sprite3D(side1)
 			.setClassName("box")
-			.setPosition( 0, 0, 0)
-			.setProperty( 'context', canvas.getContext('2d') )
+			.setPosition( width * .25 , 0, 0)
+			.setProperty( 'context', side1.getContext('2d') )
 			.setRotateFirst( false )
-			.setRegistrationPoint(window.innerWidth * .1 , window.innerHeight * .25 , 0)
+			.setRegistrationPoint(side1.width / 2  , side1.height / 2 , 0)
+			.setRotationY( 90 )
 			.update()
 	);
-	var canvas2 = document.createElement('canvas'); 
+
+	var side2 = document.createElement('canvas');
+	side2.width = width * .2 ;//500;
+	side2.height = height * .5;//500;
 	container.addChild(
-		new Sprite3D(canvas2)
+		new Sprite3D(side2)
 			.setClassName("box")
-			.setPosition(100,0,0)
-			.setProperty( 'context', canvas2.getContext('2d') )
+			.setPosition(  -1 * width * .25, 0, 0)
+			.setProperty( 'context', side2.getContext('2d') )
 			.setRotateFirst( false )
+			.setRegistrationPoint(side2.width /2 , side2.height /2 , 0)
+			.setRotationY( 90 )
 			.update()
 	);
+
+	var top = document.createElement('canvas');
+	top.width = width * .5 ;//500;
+	top.height = side1.width ;//500;
+	container.addChild(
+		new Sprite3D(top)
+			.setClassName("box")
+			.setPosition( 0, -side1.height / 2 , 0)
+			.setProperty( 'context', top.getContext('2d') )
+			.setRotateFirst( false )
+			.setRegistrationPoint(top.width / 2  , top.height / 2 , 0)
+			.setRotationX( 90 )
+			.update()
+	);
+
+	var bottom = document.createElement('canvas');
+	bottom.width = width * .5 ;//500;
+	bottom.height = side1.width ;//500;
+	container.addChild(
+		new Sprite3D(bottom)
+			.setClassName("box")
+			.setPosition( 0, side1.height / 2 , 0)
+			.setProperty( 'context', bottom.getContext('2d') )
+			.setRotateFirst( false )
+			.setRegistrationPoint(bottom.width / 2  , bottom.height / 2 , 0)
+			.setRotationX( 90 )
+			.update()
+	);
+	
+	var back = document.createElement('canvas');
+	back.width = top.width ;//500;
+	back.height = side1.height ;//500;
+	container.addChild(
+		new Sprite3D(back)
+			.setClassName("box")
+			.setPosition( 0, 0, side1.width / 2 )
+			.setProperty( 'context', back.getContext('2d') )
+			.setRotateFirst( false )
+			.setRegistrationPoint(back.width / 2  , back.height / 2 , 0)
+			.update()
+	);
+	
+	//}}}
 
 	animate();
 
-	//setInterval( move, 1000/40 );
-}
+}/*}}}*/
 
-function animate(){
+function animate(){/*{{{*/
 	requestAnimationFrame( animate );
 	update();
-}
+}/*}}}*/
 
-function update(){
-//	container.children[0].context.clearRect( 0, 0, container.children[0].domElement.width , container.children[0].domElement.height );
-	plane_draw( container.children[0].context , container.children[0].domElement.width , container.children[0].domElement.height );
-	draw( container.children[1].context , container.children[1].domElement.width , container.children[1].domElement.height );
+function update(){/*{{{*/
+	for( var i = 0 ; i < container.numChildren ; i++ ){
+		plane_draw( container.children[i].context , container.children[i].domElement.width , container.children[i].domElement.height );
+	}
 	container.rotateY(1).update();
-}
+}/*}}}*/
 
-function plane_draw( ctx, width ,height){
+function plane_draw( ctx, width ,height){/*{{{*/
 	ctx.fillStyle = "black";
 	ctx.fillRect( 0, 0, width, height );
-}
+}/*}}}*/
 
-function draw( ctx, width, height ){
-	var v;
-	
-	//ctx.clearRect( 0, 0, width, height );
+function draw( ctx, width, height ){/*{{{*/
 	ctx.fillStyle = "rgb(0,255,255)";
 	ctx.strokeStyle = "rgb(0,0,255)";
 	ctx.fillRect( width/3 , height /3 , width * 2 / 3 , height * 2 / 3);
-}
+}/*}}}*/
 
-function move(){
+function move(){/*{{{*/
 	t += .05;
 
 	container
@@ -97,7 +147,7 @@ function move(){
 		//.rotateZ(t)
 		.update();
 	
-}
+}/*}}}*/
 	</script>
 	</head>
 		<body onload="init();">
