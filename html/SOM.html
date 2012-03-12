@@ -20,7 +20,7 @@ body {
 	height: 50px;
 }
 
-.info {
+.infobox {
 //	background-color: black;
 	border-color: black;
 	border-style: solid;
@@ -28,11 +28,30 @@ body {
 	width: 200px;
 	height: 320px;
 }
+
+.info {
+	color: black;
+	width: 120px;
+	height: 50px;
+	font-size: 30px;
+	line-height: 50px;
+	font-family: "Impact"
+}
+
+.mark {
+	width: 44px;
+	height: 44px;
+	border-color: red;
+	border-style: solid;
+	-webkit-border-radius: 20px;
+	-moz-border-radius: 20px;
+	border-radius: 20px;
+}
 	</style>
 	<script src="../js/lib/Sprite3D.js" type="text/javascript"></script>
 	<script type="text/javascript">
 
-var stage,container,info,t=0;
+var stage,container,info,mark,t=0;
 
 var CELL = {LENGTH: 50, NUM: 10};
 CELL.DELTA = -1 * CELL.LENGTH * (CELL.NUM - 1) / 2;
@@ -40,6 +59,19 @@ CELL.DELTA = -1 * CELL.LENGTH * (CELL.NUM - 1) / 2;
 function init(){
 	//create root container 
 	stage = Sprite3D.createCenteredContainer();
+
+	//create marker
+	mark = new Sprite3D()
+		.setClassName("mark")
+		.setPosition(CELL.DELTA, CELL.DELTA, 0)
+		.setRegistrationPoint(50/2,50/2,0)
+		.setProperty("v",0)
+		.setProperty("h",0)
+		.update();
+
+	//set marker
+	stage.addChild( mark );
+
 
 	//create object container
 	container = new Sprite3D().setZ(-00).rotateX(-00).update();
@@ -64,24 +96,38 @@ function init(){
 	
 	}};
 	
-	info = 	new Sprite3D()
+	var infobox = 	new Sprite3D()
 			.setPosition(-400,0,0)
 			.setRegistrationPoint(200/2,320/2,0)
-			.setClassName("info")
+			.setClassName("infobox")
 			.update();
 
 	
-	stage.addChild( info );
+	stage.addChild( infobox );
 
-	info.addChild(
+	info_container={color: new Sprite3D().update(), text: new Sprite3D().update() };
+
+	infobox.addChild(info_container.color);
+	infobox.addChild(info_container.text);
+
+	//** kokokara
+	var color = rand_color();
+	info_container.color.addChild(
 		new Sprite3D()
 			.setClassName("cell")
 			.setPosition(10,10,0)
-//			.setRegistrationPoint(50/2,50/2,0)
-			.setCSS("background-color", rand_color() )
+			.setCSS("background-color", color)
 			.update()
 	);
 
+	info_container.text.addChild(
+		new Sprite3D()
+			.setClassName("info")
+			.setPosition(70,10,0)
+			.setInnerHTML(color)
+			.update()
+	);
+	//** kokomade itiiren
 
 	setInterval( move, 1000/40 );
 }
@@ -93,20 +139,25 @@ function move(){
 //		.setRotationZ(t*100)
 		.update();
 		
-	info.update();
+//	infobox.update();
 	
 	if (t  >=  1) {
 		var bc = "background-color";
 		container.children[0].setCSS(bc,rand_color() );
 		t = 0;
 	}
+
+	mark.update();
 	
 }
 
 function rand_color(){
-	var r = Math.floor( Math.random() * 256).toString(16);
-	var g = Math.floor( Math.random() * 256).toString(16);
-	var b = Math.floor( Math.random() * 256).toString(16);
+	var r = "0" + Math.floor( Math.random() * 256).toString(16);
+	var g = "0" + Math.floor( Math.random() * 256).toString(16);
+	var b = "0" + Math.floor( Math.random() * 256).toString(16);
+	r = r.substr(r.length -2);
+	g = g.substr(g.length -2);
+	b = b.substr(b.length -2);
 	return "#" + r + g + b;
 }
 	</script>
