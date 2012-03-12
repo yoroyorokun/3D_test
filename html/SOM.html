@@ -53,6 +53,8 @@ body {
 
 var stage,container,info,mark,t=0;
 
+var min={value: 99999999, i: -1, j: -1};
+
 var CELL = {LENGTH: 50, NUM: 10};
 CELL.DELTA = -1 * CELL.LENGTH * (CELL.NUM - 1) / 2;
 
@@ -117,6 +119,7 @@ function init(){
 			.setClassName("cell")
 			.setPosition(10,10,0)
 			.setCSS("background-color", color)
+			.setProperty("number",1)
 			.update()
 	);
 
@@ -125,23 +128,41 @@ function init(){
 			.setClassName("info")
 			.setPosition(70,10,0)
 			.setInnerHTML(color)
+			.setProperty("number",1)
 			.update()
 	);
 	//** kokomade itiiren
 
-	setInterval( move, 1000/40 );
+	setInterval( step, 1000/40 );
 }
 
-function move(){
-	t += .05;
+function step(){
 
+	t += 1
+	
 	container
 //		.setRotationZ(t*100)
 		.update();
-		
-//	infobox.update();
 	
-	if (t  >=  1) {
+	if ( t % 5 == 0 ){
+
+		var num = parseInt(t/5);
+		var i = parseInt(t/5)%10;
+		var j = parseInt( parseInt(t/5)/10 );
+		var select_color = container.children[num].getCSS("background-color").match(/rgb\(([0-9]*),\s([0-9]*),\s([0-9]*)/);
+		
+		var base_color = info_container.color.children[0].getCSS("background-color").match(/rgb\(([0-9]*),\s([0-9]*),\s([0-9]*)/);
+
+		if ( compair_color(select_color, base_color) ){
+			min.i = i;
+			min.j = j;
+		}
+		
+		
+	}
+	
+	
+	if (t  >  100) {
 		var bc = "background-color";
 		container.children[0].setCSS(bc,rand_color() );
 		t = 0;
@@ -149,6 +170,16 @@ function move(){
 
 	mark.update();
 	
+}
+
+function compair_color(c1,c2){
+	var dis = Math.pow(c1[1] - c2[1],2) + Math.pow(c1[2] - c2[2],2) + Math.pow(c1[3] - c2[3],2);
+
+	if ( dis < min.value ) {
+		min.value = dis;
+		return true;
+	}
+	return false;
 }
 
 function rand_color(){
