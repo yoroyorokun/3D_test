@@ -49,6 +49,7 @@ body {
 }
 	</style>
 	<script src="../js/lib/Sprite3D.js" type="text/javascript"></script>
+	<script src="../js/util/Color.js" type="text/javascript"></script>
 	<script type="text/javascript">
 
 var stage,container,info,mark,t=0;
@@ -147,8 +148,8 @@ function step(){
 	if ( t % 5 == 0 ){
 
 		var num = parseInt(t/5);
-		var i = parseInt(t/5)%10;
-		var j = parseInt( parseInt(t/5)/10 );
+		var i = parseInt(t/5)% CELL.NUM;
+		var j = parseInt( parseInt(t/5) / CELL.NUM );
 		var select_color = container.children[num].getCSS("background-color").match(/rgb\(([0-9]*),\s([0-9]*),\s([0-9]*)/);
 		
 		var base_color = info_container.color.children[0].getCSS("background-color").match(/rgb\(([0-9]*),\s([0-9]*),\s([0-9]*)/);
@@ -157,25 +158,38 @@ function step(){
 			min.i = i;
 			min.j = j;
 		}
-		
-		
+			
 	}
-	
-	
-	if (t  >  100) {
+
+	if( t  >= CELL.NUM * CELL.NUM * 5 ){
+		console.log(t);
 		var bc = "background-color";
 		container.children[0].setCSS(bc,rand_color() );
 		t = 0;
+		mark.v = min.i;
+		mark.h = min.j;
+		mark_update();
+		min={value: 99999999, i: -1, j: -1};
 	}
 
-	mark.update();
+	
+	//	container.children[0].setCSS(bc,rand_color() );
 	
 }
 
-function compair_color(c1,c2){
-	var dis = Math.pow(c1[1] - c2[1],2) + Math.pow(c1[2] - c2[2],2) + Math.pow(c1[3] - c2[3],2);
+function mark_update(){
+	mark.setPosition(CELL.DELTA + mark.v * CELL.LENGTH , CELL.DELTA + mark.h * CELL.LENGTH  , 0)
+		.update();
+}
+
+function compair_color(rgb_c1,rgb_c2){
+	var c1 = rgb_to_lab(rgb_c1[1],rgb_c1[2],rgb_c1[3]);
+	var c2 = rgb_to_lab(rgb_c2[1],rgb_c2[2],rgb_c2[3]);
+	
+	var dis = Math.pow(c1.l - c2.l,2) + Math.pow(c1.a - c2.a,2) + Math.pow(c1.b - c2.b,2);
 
 	if ( dis < min.value ) {
+		console.log(dis);
 		min.value = dis;
 		return true;
 	}
