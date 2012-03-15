@@ -42,3 +42,20 @@ function color_f(t){
 }
 
 
+function rand_color(){
+	var r = Math.floor( Math.random() * 256 );
+	var g = Math.floor( Math.random() * 256 );
+	var b = Math.floor( Math.random() * 256 );
+	return format_color(r,g,b);
+}
+
+function format_color(r,g,b){
+	var sr = "0" + parseInt(r).toString(16);
+	var sg = "0" + parseInt(g).toString(16);
+	var sb = "0" + parseInt(b).toString(16);
+	sr = sr.substr(sr.length -2);
+	sg = sg.substr(sg.length -2);
+	sb = sb.substr(sb.length -2);
+	return ("#" + sr + sg + sb);
+}
+

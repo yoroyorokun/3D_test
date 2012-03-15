@@ -56,7 +56,7 @@ var stage,container,info,mark,t=0;
 
 var min={value: 99999999, i: -1, j: -1};
 
-var CELL = {LENGTH: 50, NUM: 10};
+var CELL = {LENGTH: 50, NUM: 5};
 CELL.DELTA = -1 * CELL.LENGTH * (CELL.NUM - 1) / 2;
 
 function init(){
@@ -139,11 +139,11 @@ function init(){
 
 function step(){
 
-	t += 1
+	t += 5 
 	
-	container
+//	container
 //		.setRotationZ(t*100)
-		.update();
+//		.update();
 	
 	if ( t % 5 == 0 ){
 
@@ -158,53 +158,79 @@ function step(){
 			min.i = i;
 			min.j = j;
 		}
-			
+
 	}
 
-	if( t  >= CELL.NUM * CELL.NUM * 5 ){
-		console.log(t);
+	if( t  >= ((CELL.NUM * CELL.NUM-1) * 5) ){
+
 		var bc = "background-color";
-		container.children[0].setCSS(bc,rand_color() );
+//		container.children[0].setCSS(bc,rand_color() );
+		
+		mark_update(min.i,min.j);
+
 		t = 0;
-		mark.v = min.i;
-		mark.h = min.j;
-		mark_update();
 		min={value: 99999999, i: -1, j: -1};
+
+		SOM_update();
 	}
 
-	
-	//	container.children[0].setCSS(bc,rand_color() );
-	
+	container.update();
+
 }
 
-function mark_update(){
+function SOM_update(){
+	var num = mark.h + mark.v * CELL.NUM;
+	var s_col = container.children[num].getCSS("background-color").match(/rgb\(([0-9]*),\s([0-9]*),\s([0-9]*)/);
+	var b_col = info_container.color.children[0].getCSS("background-color").match(/rgb\(([0-9]*),\s([0-9]*),\s([0-9]*)/);
+
+	console.log( s_col[1] + " " + s_col[2] + " " + s_col[3] );
+	console.log( b_col[1] + " " + b_col[2] + " " + b_col[3] );
+
+	//***** som method 
+	var r = Math.floor( ( parseInt(s_col[1]) + parseInt(b_col[1]) ) / 2 );
+	var g = Math.floor( ( parseInt(s_col[2]) + parseInt(b_col[2]) ) / 2 );
+	var b = Math.floor( ( parseInt(s_col[3]) + parseInt(b_col[3]) ) / 2 );
+	//*******
+
+	console.log( "->" + r + " " + g + " " + b );
+
+	console.log( num );
+	console.log(	container.children[num].getCSS("background-color") );
+	container.children[num].setCSS("background-color", format_color(r,g,b) );
+	console.log(	container.children[num].getCSS("background-color") );
+
+
+//	container.update();
+
+	console.log(num);
+}
+
+function mark_update(v,h){
+	mark.v = v;
+	mark.h = h;
 	mark.setPosition(CELL.DELTA + mark.v * CELL.LENGTH , CELL.DELTA + mark.h * CELL.LENGTH  , 0)
 		.update();
 }
 
 function compair_color(rgb_c1,rgb_c2){
+
+	//******** rgb -> lab
 	var c1 = rgb_to_lab(rgb_c1[1],rgb_c1[2],rgb_c1[3]);
 	var c2 = rgb_to_lab(rgb_c2[1],rgb_c2[2],rgb_c2[3]);
-	
+	//********
+
+//	var c1 = {l: rgb_c1[1], a: rgb_c1[2], b: rgb_c1[3]};
+//	var c2 = {l: rgb_c2[1], a: rgb_c2[2], b: rgb_c2[3]};
+
 	var dis = Math.pow(c1.l - c2.l,2) + Math.pow(c1.a - c2.a,2) + Math.pow(c1.b - c2.b,2);
 
 	if ( dis < min.value ) {
-		console.log(dis);
 		min.value = dis;
 		return true;
 	}
 	return false;
 }
 
-function rand_color(){
-	var r = "0" + Math.floor( Math.random() * 256).toString(16);
-	var g = "0" + Math.floor( Math.random() * 256).toString(16);
-	var b = "0" + Math.floor( Math.random() * 256).toString(16);
-	r = r.substr(r.length -2);
-	g = g.substr(g.length -2);
-	b = b.substr(b.length -2);
-	return "#" + r + g + b;
-}
 	</script>
 	</head>
 	<body onload="init();">
